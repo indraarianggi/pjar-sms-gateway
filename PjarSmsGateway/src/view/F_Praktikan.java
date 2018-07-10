@@ -32,7 +32,6 @@ import main.TableListener;
 public class F_Praktikan extends javax.swing.JFrame {
     
     private DatabaseConnection kon;
-    private DefaultTableModel tabel;
     private String kueri;
     public static int modeformpraktikan;
     public static String n_id;
@@ -85,11 +84,12 @@ public class F_Praktikan extends javax.swing.JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 String kelas = cbClass.getSelectedItem().toString().toUpperCase();
+                System.out.println(kelas);
                 try {
-                    if(kelas=="" || kelas==null){
-                        getData(kelas);
-                    }else{
+                    if(kelas=="ALL"){
                         getData();
+                    }else{
+                        getData(kelas);
                     }
                 } catch (ClassNotFoundException ex) {
                     Logger.getLogger(F_Praktikan.class.getName()).log(Level.SEVERE, null, ex);
@@ -98,7 +98,6 @@ public class F_Praktikan extends javax.swing.JFrame {
                 } catch (IOException ex) {
                     Logger.getLogger(F_Praktikan.class.getName()).log(Level.SEVERE, null, ex);
                 }
-                //JOptionPane.showMessageDialog(null, "data : "+cmbBox_Tipe.getSelectedItem().toString()+" tipe = "+tipe);
             }
         });
         
@@ -109,10 +108,10 @@ public class F_Praktikan extends javax.swing.JFrame {
                 String kelas = cbClass.getSelectedItem().toString().toUpperCase();
                 
                 try {
-                    if(kelas=="" || kelas==null){
-                        getData(kelas, txtName.getText());
-                    }else{
+                    if(kelas=="ALL"){
                         getData(txtName.getText());
+                    }else{
+                        getData(kelas, txtName.getText());
                     }
                 } catch (ClassNotFoundException ex) {
                     Logger.getLogger(F_Praktikan.class.getName()).log(Level.SEVERE, null, ex);
@@ -130,7 +129,7 @@ public class F_Praktikan extends javax.swing.JFrame {
                 String kelas = cbClass.getSelectedItem().toString().toUpperCase();
                 
                 try {
-                    if(kelas=="" || kelas==null){
+                    if(kelas=="ALL"){
                         getData(kelas, txtName.getText());
                     }else{
                         getData(txtName.getText());
@@ -433,7 +432,7 @@ public class F_Praktikan extends javax.swing.JFrame {
         cbClass.setBackground(new java.awt.Color(0, 153, 102));
         cbClass.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
         cbClass.setForeground(new java.awt.Color(0, 153, 102));
-        cbClass.setSelectedIndex(-1);
+        cbClass.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "all" }));
         cbClass.addItemListener(new java.awt.event.ItemListener() {
             public void itemStateChanged(java.awt.event.ItemEvent evt) {
                 cbClassItemStateChanged(evt);
@@ -541,7 +540,7 @@ public class F_Praktikan extends javax.swing.JFrame {
         // TODO add your handling code here:
         if(modeformpraktikan == 1){
             int row = tblPraktikan.getSelectedRow();
-            n_id = (String) tblPraktikan.getValueAt(row, 1);
+            n_id = (String) tblPraktikan.getValueAt(row, 2);
             this.setVisible(false);
             new F_FormPraktikan("Edit Data Praktikan").setVisible(true);
         }
@@ -556,7 +555,7 @@ public class F_Praktikan extends javax.swing.JFrame {
         // TODO add your handling code here:
         if(modeformpraktikan == 1){
             int row = tblPraktikan.getSelectedRow();
-            n_id = (String) tblPraktikan.getValueAt(row, 1);
+            n_id = (String) tblPraktikan.getValueAt(row, 2);
             try {
                 Statement stasql = (Statement)kon.Connect().createStatement(); 
                 kueri=("delete from praktikan where id = '"+n_id+"';");
@@ -573,28 +572,30 @@ public class F_Praktikan extends javax.swing.JFrame {
 
     private void btnMessageActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnMessageActionPerformed
         // TODO add your handling code here:
-        int count_check = 0;
-        ArrayList telepon = new ArrayList();
-        for(int i = 0;i<tblPraktikan.getRowCount();i++){
-            Boolean check = Boolean.valueOf(tblPraktikan.getValueAt(i,0).toString());
-            String no_tlp = tblPraktikan.getValueAt(i, 6).toString();
-            if(check){
-                count_check +=1;
-                telepon.add(no_tlp);
+        if(modeformpraktikan == 1){
+            int count_check = 0;
+            ArrayList telepon = new ArrayList();
+            for(int i = 0;i<tblPraktikan.getRowCount();i++){
+                Boolean check = Boolean.valueOf(tblPraktikan.getValueAt(i,0).toString());
+                String no_tlp = tblPraktikan.getValueAt(i, 6).toString();
+                if(check){
+                    count_check +=1;
+                    telepon.add(no_tlp);
+                }
             }
-        }
-        for(int i=0;i<telepon.size();i++){
-            System.out.println(telepon.get(i).toString());
-        }
-        try {
-            //pgBar.setVisible(true);
-            // BUKA F_FormMessage !!!!
-            F_FormMessage form_message = new F_FormMessage("Send Message To Praktikan", telepon);
-            form_message.setVisible(true);
-            //pesan.sendMessage(hp, txt_pesan.getText());
-            //pgBar.setVisible(false);
-        } catch (Exception ex) {
-            Logger.getLogger(F_Asisten.class.getName()).log(Level.SEVERE, null, ex);
+            for(int i=0;i<telepon.size();i++){
+                System.out.println(telepon.get(i).toString());
+            }
+            try {
+                //pgBar.setVisible(true);
+                // BUKA F_FormMessage !!!!
+                F_FormMessage form_message = new F_FormMessage("Send Message To Praktikan", telepon);
+                form_message.setVisible(true);
+                //pesan.sendMessage(hp, txt_pesan.getText());
+                //pgBar.setVisible(false);
+            } catch (Exception ex) {
+                Logger.getLogger(F_Asisten.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
     }//GEN-LAST:event_btnMessageActionPerformed
 
@@ -643,7 +644,7 @@ public class F_Praktikan extends javax.swing.JFrame {
             stasql.close();
         }
         catch(Exception e){
-            JOptionPane.showMessageDialog(null,"Nama Akun atau Kata Sandi Salah");
+            JOptionPane.showMessageDialog(null,"Gagal mengambil data kelas");
         }
     }
 

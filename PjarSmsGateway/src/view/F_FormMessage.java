@@ -36,6 +36,7 @@ public class F_FormMessage extends javax.swing.JFrame {
     private DatabaseConnection konek = new DatabaseConnection();
     private SmsGateway  pesan = new SmsGateway();
     private ArrayList<String> no_telepon;
+    private ArrayList<String> isi_pesan = null;
 
     /**
      * Creates new form F_FormMessage
@@ -50,6 +51,20 @@ public class F_FormMessage extends javax.swing.JFrame {
         initComponents();
         lblTitle.setText(formTitle);
         no_telepon = telepon;
+        
+        DefaultListModel model = new DefaultListModel();
+        listPenerima.setModel(model);
+        for(int i=0;i<no_telepon.size();i++) {
+            model.add(i, telepon.get(i));
+        }        
+    }
+    
+    public F_FormMessage(String formTitle, ArrayList<String> telepon, ArrayList<String> pesan) {
+        setResizable(false);
+        initComponents();
+        lblTitle.setText(formTitle);
+        no_telepon = telepon;
+        isi_pesan = pesan;
         
         DefaultListModel model = new DefaultListModel();
         listPenerima.setModel(model);
@@ -213,7 +228,11 @@ public class F_FormMessage extends javax.swing.JFrame {
         // TODO add your handling code here:
         try {
             //pgBar.setVisible(true);
-            pesan.sendMessage(no_telepon, txtMessage.getText());
+            if(isi_pesan != null) {
+                pesan.sendMessage(no_telepon, isi_pesan, txtMessage.getText());
+            } else {
+                pesan.sendMessage(no_telepon, txtMessage.getText());
+            }
             //pgBar.setVisible(false);
             dispose();
         } catch (Exception ex) {

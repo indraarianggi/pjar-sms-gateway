@@ -493,7 +493,7 @@ public class F_Asisten extends javax.swing.JFrame {
         // TODO add your handling code here:
         if(modeformasisten == 1){
             int row = tblAsisten.getSelectedRow();
-            n_id = (String) tblAsisten.getValueAt(row, 1);
+            n_id = (String) tblAsisten.getValueAt(row, 2);
             this.setVisible(false);
             new F_FormAsisten("Edit Data Asisten").setVisible(true);
         }
@@ -508,7 +508,7 @@ public class F_Asisten extends javax.swing.JFrame {
         // TODO add your handling code here:
         if(modeformasisten == 1){
             int row = tblAsisten.getSelectedRow();
-            n_id = (String) tblAsisten.getValueAt(row, 1);
+            n_id = (String) tblAsisten.getValueAt(row, 2);
             try {
                 Statement stasql = (Statement)kon.Connect().createStatement(); 
                 kueri=("delete from asisten where id = '"+n_id+"';");
@@ -530,28 +530,30 @@ public class F_Asisten extends javax.swing.JFrame {
 
     private void btnMessageActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnMessageActionPerformed
         // TODO add your handling code here:
-        int count_check = 0;
-        ArrayList telepon = new ArrayList();
-        for(int i = 0;i<tblAsisten.getRowCount();i++){
-            Boolean check = Boolean.valueOf(tblAsisten.getValueAt(i,0).toString());
-            String no_tlp = tblAsisten.getValueAt(i, 4).toString();
-            if(check){
-                count_check +=1;
-                telepon.add(no_tlp);
+        if(modeformasisten == 1){
+            int count_check = 0;
+            ArrayList telepon = new ArrayList();
+            for(int i = 0;i<tblAsisten.getRowCount();i++){
+                Boolean check = Boolean.valueOf(tblAsisten.getValueAt(i,0).toString());
+                String no_tlp = tblAsisten.getValueAt(i, 4).toString();
+                if(check){
+                    count_check +=1;
+                    telepon.add(no_tlp);
+                }
             }
-        }
-        for(int i=0;i<telepon.size();i++){
-            System.out.println(telepon.get(i).toString());
-        }
-        try {
-            //pgBar.setVisible(true);
-            // BUKA F_FormMessage !!!!
-            F_FormMessage form_message = new F_FormMessage("Send Message To Assisten", telepon);
-            form_message.setVisible(true);
-            //pesan.sendMessage(hp, txt_pesan.getText());
-            //pgBar.setVisible(false);
-        } catch (Exception ex) {
-            Logger.getLogger(F_Asisten.class.getName()).log(Level.SEVERE, null, ex);
+            for(int i=0;i<telepon.size();i++){
+                System.out.println(telepon.get(i).toString());
+            }
+            try {
+                //pgBar.setVisible(true);
+                // BUKA F_FormMessage !!!!
+                F_FormMessage form_message = new F_FormMessage("Send Message To Assisten", telepon);
+                form_message.setVisible(true);
+                //pesan.sendMessage(hp, txt_pesan.getText());
+                //pgBar.setVisible(false);
+            } catch (Exception ex) {
+                Logger.getLogger(F_Asisten.class.getName()).log(Level.SEVERE, null, ex);
+            }            
         }
     }//GEN-LAST:event_btnMessageActionPerformed
 

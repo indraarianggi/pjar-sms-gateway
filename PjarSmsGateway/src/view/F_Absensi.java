@@ -549,13 +549,13 @@ public class F_Absensi extends javax.swing.JFrame {
     
     private void searchData(String kelas, String matprak, String nama) {
         try {
-            if(kelas=="all" && matprak=="all" && nama==""){
+            if(kelas=="ALL" && matprak=="ALL" && nama==""){
                 getData();
-            }else if(matprak=="all" && nama==""){
+            }else if(matprak=="ALL" && nama==""){
                 getData(kelas);
-            } else if (kelas=="all" && nama=="") {
+            } else if (kelas=="ALL" && nama=="") {
                 getData(matprak);
-            } else if (kelas=="all" && matprak=="all") {
+            } else if (kelas=="ALL" && matprak=="ALL") {
                 getData(nama);
             } else {
                 getData(kelas, matprak, nama);
